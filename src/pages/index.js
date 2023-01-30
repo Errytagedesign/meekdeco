@@ -1,9 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Manrope } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
-import About from "./About/About";
-import NavBar from "@/components/navbar/NavBar";
+import { NavBar } from "@/export/allComps";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
@@ -22,7 +20,9 @@ export default function Home() {
         `}</style>
       </Head>
       <main className={styles.main}>
-        <NavBar />
+        {/* <NavBar /> */}
+
+        <h2> HomePage</h2>
       </main>
     </>
   );

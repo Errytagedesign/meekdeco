@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 
 import "@/styles/globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Footer, NavBar } from "@/export/allComps";
 
 export default function App({ Component, pageProps }) {
   const AOS = require("aos");
@@ -10,5 +11,11 @@ export default function App({ Component, pageProps }) {
     AOS.init();
   }, [AOS]);
 
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <NavBar />
+      <Component {...pageProps} />
+      <Footer />
+    </>
+  );
 }

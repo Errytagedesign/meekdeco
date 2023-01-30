@@ -8,6 +8,7 @@
   --secColor: #f9ddb1;
   --greyColor: #d0d0d0;
   --blackColor: #1e1e1e;
+  --white: #fff;
 }
 
 * {
@@ -26,8 +27,8 @@ body {
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  /* color: var(--white) !important; */
+  text-decoration: none !important;
 }
 
 h1,
