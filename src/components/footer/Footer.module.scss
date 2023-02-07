@@ -3,51 +3,14 @@
   background-color: var(--pryColor);
   color: var(--white);
 
-  .community-container {
-    @media screen and (max-width: 890px) {
-      width: 100%;
-      margin-top: 50px;
-
-      .icon {
-        width: 40%;
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-  }
-
-  .logo {
-    .community-container {
-      width: 50%;
-      margin-top: 100px;
-
-      h4 {
-        margin-bottom: 25px;
-      }
-      .icon {
-        display: flex;
-        justify-content: space-between;
-        font-size: 24px;
-      }
-    }
+  .subscribe {
+    background-color: var(--white);
+    padding: 1em 1.5em;
+    border-radius: 12px;
   }
 
   @media screen and (max-width: 890px) {
     padding: 20px 35px 50px;
-  }
-
-  .logo {
-    h2 {
-      font-size: 25px;
-      font-weight: 700;
-      margin-left: 5px;
-    }
-
-    p {
-      font-size: 14px;
-      font-weight: 400;
-      margin-top: 9px;
-    }
   }
 
   aside {

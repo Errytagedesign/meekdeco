@@ -10,14 +10,21 @@ import styles from "./NavBar.module.scss";
 // images
 import images from "../../export/images";
 import Link from "next/link";
+import SignUp from "../auth/signUp/SignUp";
 
 function NavBar() {
   const [navbar, setNavbar] = useState(true);
   const [activeItem, setActiveItem] = useState(false);
+  const [show, setShow] = useState(false);
 
-  const handleNav = (id) => {
+  const handleNav = () => {
     setNavbar(!navbar);
-    // setActiveItem(!activeItem);
+  };
+
+  const handleClose = () => {
+    setShow(!show);
+  };
+  const handleActive = (id) => {
     setActiveItem({
       [id]: !activeItem[id],
     });
@@ -43,24 +50,24 @@ function NavBar() {
           <Link
             onClick={() => setActiveItem(false)}
             href="/"
-            className="col-8 col-lg-3"
+            className="col-7 col-lg-3"
           >
             <Image src={images.Logo} alt=" Wolf Pack Logo" />
           </Link>
           <div
-            className={`col-12 col-lg-9 justify-content-end d-flex flex-column flex-lg-row ${
+            className={`col-12 col-lg-8 d-flex flex-column flex-lg-row ${
               navbar ? styles.displayNav : styles.navMove
             }`}
           >
-            <aside>
+            <aside className="col-12 d-flex flex-column flex-lg-row ">
               <section
-                className={`${styles.navItems} "col-12  d-flex flex-column flex-lg-row justify-content-between text-center "`}
+                className={`${styles.navItems} col-12 col-lg-6  d-flex flex-column flex-lg-row justify-content-between  `}
               >
                 {NavLinks.map((item, idx) => (
                   <div
                     key={idx}
                     onClick={() => {
-                      handleNav(item.id);
+                      handleActive(item.id);
                     }}
                     className={`${
                       activeItem[item.id] ? styles.active : styles.notActive
@@ -72,6 +79,27 @@ function NavBar() {
                   </div>
                 ))}
               </section>
+
+              <div className="d-flex flex-column flex-lg-row justify-content-between col-12 col-lg-4">
+                <div className="me-3 col-12 col-lg-6">
+                  {" "}
+                  <input
+                    className="form-control col-12"
+                    type="search"
+                    placeholder="search..."
+                  />{" "}
+                </div>
+
+                <div className="d-flex flex-row justify-content-between mt-3 mt-lg-0 col-12 col-lg-6 ">
+                  <Image src={images.cart} alt="" />
+                  <Image src={images.heart} alt="" />
+                  <Image
+                    onClick={() => setShow(!show)}
+                    src={images.profile}
+                    alt=""
+                  />
+                </div>
+              </div>
             </aside>
           </div>
           {/* Hambuger icon */}
@@ -85,6 +113,8 @@ function NavBar() {
           </div>
         </nav>
       </section>
+
+      {show && <SignUp close={handleClose} />}
     </div>
   );
 }

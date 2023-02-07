@@ -1,0 +1,81 @@
+/* Popup style */
+.popUpBox {
+  position: fixed;
+  background: #00000050;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  // display: flex;
+  // -webkit-box-align: center;
+  // align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+
+  @media screen and (max-width: 900px) {
+    padding: 1em;
+  }
+
+  .close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+      font-size: 30px;
+      font-weight: 300;
+      margin: 0;
+      color: var(--white);
+      @media screen and (max-width: 900px) {
+        font-size: 20px;
+      }
+    }
+    cursor: pointer;
+    background-color: var(--pryColor);
+    padding: 20px;
+    // margin: 60px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    @media screen and (max-width: 900px) {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .box {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    height: auto;
+    padding: 1em;
+    background: #fff;
+    border-radius: 20px;
+    align-items: flex-end;
+
+    @media screen and (max-width: 900px) {
+      width: 100%;
+      padding: 0em;
+    }
+
+    input {
+      padding: 1em;
+    }
+    label {
+      margin-top: 1.4em;
+    }
+
+    .inputContainer {
+      position: relative;
+      .icon {
+        position: absolute;
+        left: 80%;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        font-size: 30px;
+        color: var(--pryColor);
+      }
+    }
+  }
+}

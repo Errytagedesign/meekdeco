@@ -24,7 +24,18 @@
     //     width: 12%;
     //   }
     // }
+    aside {
+      align-items: center;
+      justify-content: space-between;
+      @media screen and (max-width: 900px) {
+        align-items: flex-start;
+        justify-content: space-around;
+      }
 
+      img {
+        cursor: pointer;
+      }
+    }
     .navItems {
       .active {
         background-color: var(--secColor);

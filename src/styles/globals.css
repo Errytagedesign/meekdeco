@@ -43,9 +43,14 @@ a {
   font-family: "Manrope", sans-serif;
 }
 
+input,
+button {
+  border: none;
+}
+
 .main-btn {
   background-color: var(--pryColor);
-  padding: 12px 64px;
+  padding: 12px 44px;
   border-radius: 8px;
   color: #fff;
   font-weight: 600;
