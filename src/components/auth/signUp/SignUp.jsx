@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./SignUp.module.scss";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/libs/firebase-config";
@@ -9,46 +9,79 @@ const initialState = {
   password: "",
   confirmPassword: "",
 };
+
 function SignUp({ close }) {
   const [loginData, setLoginData] = useState(initialState);
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState({
+    errorMessage: "",
+    errorBolean: false,
+  });
   const [passwordType, setPasswordType] = useState(false);
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+  // toggle password views
   const togglePassword = (id) => {
     const passwordInput = document.getElementById(id);
 
-    setPasswordType((prev) => ({ [id]: !prev[id] }));
+    // setting the state value to either true or false base on id
+    setPasswordType((prev) => ({ ...passwordType, [id]: !prev[id] }));
+
     if (passwordInput.type === "password") {
       return (passwordInput.type = "text");
     }
     passwordInput.type = "password";
   };
 
-  // const validatePassword =() => {
-  //   let isValid  = true
+  // validating
+  const validatePassword = () => {
+    let isValid = true;
 
-  //   if (loginData !==  '') {
-  //     if(loginData.password !== )
-  //   }
-  // }
+    if (loginData !== "") {
+      if (loginData.password !== loginData.confirmPassword) {
+        console.log(loginData.password);
 
+        isValid = false;
+        setErrors({ ...errors, errorBolean: true });
+      }
+    }
+    return isValid;
+  };
+
+  //  Form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({ ...errors, errorBolean: false });
+    console.log(loginData);
 
-    createUserWithEmailAndPassword(auth, loginData.email, loginData.password)
-      .then((res) => {
-        const user = res.user;
+    if (validatePassword()) {
+      createUserWithEmailAndPassword(auth, loginData.email, loginData.password)
+        .then((res) => {
+          const user = res.user;
 
-        console.log(user);
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
+          console.log(user);
+        })
+        .catch((e) => {
+          setErrors({ ...errors, errorMessage: e.message });
+          console.log(e.message);
+        });
+    }
+
+    // setLoginData(initialState);
   };
+
+  // anytime any of the input is active, the error will be set to false
+
+  useEffect(() => {
+    if (
+      loginData.email !== "" ||
+      loginData.password !== "" ||
+      loginData.confirmPassword !== ""
+    )
+      setErrors({ errorBolean: false });
+  }, [loginData.confirmPassword, loginData.email, loginData.password]);
 
   return (
     <div className={`${styles.popUpBox} d-flex flex-column`}>
@@ -102,7 +135,7 @@ function SignUp({ close }) {
               <input
                 id="confirmpass"
                 type="password"
-                name="confirm password"
+                name="confirmPassword"
                 defaultValue={initialState.confirmPassword}
                 onChange={handleChange}
                 placeholder="retype password"
@@ -120,11 +153,13 @@ function SignUp({ close }) {
               </div>
             </div>
 
-            {error && (
+            {errors.errorBolean ? (
               <small style={{ color: "red" }}>
                 {" "}
                 Alaye you need glasses? this your password nor match abeg.{" "}
               </small>
+            ) : (
+              <small style={{ color: "red" }}> {errors.errorMessage} </small>
             )}
           </div>
 

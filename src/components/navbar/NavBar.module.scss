@@ -12,19 +12,7 @@
       width: 90%;
     }
 
-    // .logo {
-    //   img {
-    //     width: 100%;
-    //   }
-    // }
-
-    // .Btn {
-    //   font-size: 16px;
-    //   img {
-    //     width: 12%;
-    //   }
-    // }
-    aside {
+    article {
       align-items: center;
       justify-content: space-between;
       @media screen and (max-width: 900px) {
@@ -36,6 +24,61 @@
         cursor: pointer;
       }
     }
+
+    .profile {
+      position: relative;
+
+      .loginBtn {
+        position: absolute;
+        top: 80px;
+        bottom: 0;
+        right: -20px;
+        padding: 1.5em;
+        border-radius: 12px;
+        background-color: var(--pryColor);
+        color: var(--white);
+        font-size: 1.5em;
+        font-weight: 600;
+
+        button {
+          color: var(--white);
+          font-size: 1.5em;
+          font-weight: 600;
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          padding: 1em;
+          display: block;
+          border-radius: 12px;
+          transform: rotate(50deg);
+          background-color: var(--pryColor);
+          top: -20px;
+          bottom: 0;
+          right: 30px;
+          bottom: 0;
+          z-index: -1;
+        }
+
+        @media screen and (max-width: 900px) {
+          top: 40px;
+          right: 0;
+
+          padding: 0.9em;
+          button {
+            color: var(--pryColor);
+            font-size: 1em;
+            font-weight: 600;
+          }
+          background-color: var(--white);
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+
     .navItems {
       .active {
         background-color: var(--secColor);
@@ -251,9 +294,9 @@
           height: 100vh;
           background: var(--pryColor);
 
-          section {
-            height: auto;
-            margin-top: 100px;
+          article {
+            height: 60vh;
+            // margin-top: 100px;
             // padding: 3em 0;
           }
         }
@@ -281,9 +324,9 @@
           height: 100vh;
           background: var(--pryColor);
 
-          section {
-            height: auto;
-            margin-top: 100px;
+          article {
+            height: 50vh;
+            // margin-top: 100px;
             // padding: 3em 0;
           }
         }

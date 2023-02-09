@@ -60,46 +60,60 @@ function NavBar() {
             }`}
           >
             <aside className="col-12 d-flex flex-column flex-lg-row ">
-              <section
-                className={`${styles.navItems} col-12 col-lg-6  d-flex flex-column flex-lg-row justify-content-between  `}
-              >
-                {NavLinks.map((item, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      handleActive(item.id);
-                    }}
-                    className={`${
-                      activeItem[item.id] ? styles.active : styles.notActive
-                    }`}
-                  >
-                    <Link className={styles.Links} href={item.url}>
-                      {item.name}
-                    </Link>
+              <article className="col-12 d-flex flex-column flex-lg-row   ">
+                <section
+                  className={`${styles.navItems} col-12 col-lg-6  d-flex flex-column flex-lg-row justify-content-between  `}
+                >
+                  {NavLinks.map((item, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        handleActive(item.id);
+                      }}
+                      className={`${
+                        activeItem[item.id] ? styles.active : styles.notActive
+                      }`}
+                    >
+                      <Link className={styles.Links} href={item.url}>
+                        {item.name}
+                      </Link>
+                    </div>
+                  ))}
+                </section>
+
+                <div className="d-flex flex-column flex-lg-row justify-content-between col-12 col-lg-4">
+                  <div className="me-3 col-12 col-lg-6">
+                    {" "}
+                    <input
+                      className="form-control col-12"
+                      type="search"
+                      placeholder="search..."
+                    />{" "}
                   </div>
-                ))}
-              </section>
 
-              <div className="d-flex flex-column flex-lg-row justify-content-between col-12 col-lg-4">
-                <div className="me-3 col-12 col-lg-6">
-                  {" "}
-                  <input
-                    className="form-control col-12"
-                    type="search"
-                    placeholder="search..."
-                  />{" "}
+                  <div
+                    className={` ${styles.profile} d-flex flex-row justify-content-between mt-3 mt-lg-0 col-12 col-lg-6 `}
+                  >
+                    <Image src={images.cart} alt="" />
+                    <Image src={images.heart} alt="" />
+                    <div>
+                      <Image
+                        onClick={() => setShow(!show)}
+                        src={images.profile}
+                        alt=""
+                      />
+                    </div>
+                    {show && (
+                      <section
+                        data-aos="zoom-in"
+                        className={`${styles.loginBtn} d-flex align-items-center justify-content-center`}
+                      >
+                        <button>Login</button>
+                      </section>
+                    )}
+                  </div>
                 </div>
-
-                <div className="d-flex flex-row justify-content-between mt-3 mt-lg-0 col-12 col-lg-6 ">
-                  <Image src={images.cart} alt="" />
-                  <Image src={images.heart} alt="" />
-                  <Image
-                    onClick={() => setShow(!show)}
-                    src={images.profile}
-                    alt=""
-                  />
-                </div>
-              </div>
+              </article>
             </aside>
           </div>
           {/* Hambuger icon */}
@@ -114,7 +128,7 @@ function NavBar() {
         </nav>
       </section>
 
-      {show && <SignUp close={handleClose} />}
+      {/* {show && <SignUp close={handleClose} />} */}
     </div>
   );
 }

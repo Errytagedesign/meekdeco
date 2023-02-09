@@ -46,6 +46,7 @@ a {
 input,
 button {
   border: none;
+  background-color: transparent;
 }
 
 .main-btn {
