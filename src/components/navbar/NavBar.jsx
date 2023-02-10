@@ -11,19 +11,30 @@ import styles from "./NavBar.module.scss";
 import images from "../../export/images";
 import Link from "next/link";
 import SignUp from "../auth/signUp/SignUp";
+import { useSelector } from "react-redux";
+
+import { selectUsers } from "@/features/loginSlice";
 
 function NavBar() {
   const [navbar, setNavbar] = useState(true);
   const [activeItem, setActiveItem] = useState(false);
   const [show, setShow] = useState(false);
 
+  // redux toolkits
+  const currentUser = useSelector(selectUsers);
+
   const handleNav = () => {
     setNavbar(!navbar);
+  };
+
+  const handlePopUp = (id) => {
+    setShow((prev) => ({ ...show, [id]: !prev[id] }));
   };
 
   const handleClose = () => {
     setShow(!show);
   };
+
   const handleActive = (id) => {
     setActiveItem({
       [id]: !activeItem[id],
@@ -98,17 +109,29 @@ function NavBar() {
                     <Image src={images.heart} alt="" />
                     <div>
                       <Image
-                        onClick={() => setShow(!show)}
+                        id="profile"
+                        onClick={() => {
+                          handlePopUp("logincta");
+                        }}
                         src={images.profile}
                         alt=""
                       />
                     </div>
-                    {show && (
+                    {show["logincta"] && (
                       <section
+                        id="logincta"
                         data-aos="zoom-in"
                         className={`${styles.loginBtn} d-flex align-items-center justify-content-center`}
                       >
-                        <button>Login</button>
+                        {currentUser ? (
+                          <button onClick={() => handlePopUp("login-form")}>
+                            Logout
+                          </button>
+                        ) : (
+                          <button onClick={() => handlePopUp("login-form")}>
+                            Login
+                          </button>
+                        )}
                       </section>
                     )}
                   </div>
@@ -128,7 +151,7 @@ function NavBar() {
         </nav>
       </section>
 
-      {/* {show && <SignUp close={handleClose} />} */}
+      {show["login-form"] && <SignUp id="login-form" close={handleClose} />}
     </div>
   );
 }

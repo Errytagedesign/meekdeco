@@ -26,7 +26,7 @@ export const newUser = createSlice({
 export const { login, logout } = newUser.actions;
 
 // selectors
-export const selectors = (state) => {
+export const selectUsers = (state) => {
   state.user.user;
 };
 
