@@ -7,12 +7,13 @@ export const newUser = createSlice({
 
   name: "user",
   initialState: {
-    value: "",
+    user: null,
   },
 
   /*  create reducer to accept payload or change value of the initial state, give each reducer an approriate name with two params; state and action   */
   reducers: {
     login: (state, action) => {
+      // console.log(state);
       // action.payload means the result will get from server when user sign up
       state.user = action.payload;
     },
@@ -26,9 +27,7 @@ export const newUser = createSlice({
 export const { login, logout } = newUser.actions;
 
 // selectors
-export const selectUsers = (state) => {
-  state.user.user;
-};
+export const selectUsers = (state) => state.user.user;
 
 /*  export reducers  */
 

@@ -4,13 +4,12 @@ import {
   auth,
   createUserWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
 } from "@/libs/firebase-config";
 import { BsFillEyeSlashFill, BsFillEyeFill } from "react-icons/bs";
 import { selectUsers, login, logout } from "@/features/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useSweetAlert } from "@/hooks/useSweetAlert";
 
 const initialState = {
   firstName: "",
@@ -30,10 +29,13 @@ function SignUp({ close }) {
   });
 
   const [userSignUP, setUserSignUP] = useState(false);
-  const [profilePic, setProfilePic] = useState();
   const [passwordType, setPasswordType] = useState(false);
 
+  // Redux
   const dispatch = useDispatch();
+
+  // Sweetalerts
+  const { Toast } = useSweetAlert();
 
   const handleChange = (e) => {
     setSignUpData({ ...signUpData, [e.target.name]: e.target.value });
@@ -77,7 +79,7 @@ function SignUp({ close }) {
   const handleSignUp = (e) => {
     e.preventDefault();
     setErrors({ ...errors, errorBolean: false });
-    // console.log(signUpData);
+    console.log(signUpData);
 
     if (validatePassword()) {
       createUserWithEmailAndPassword(
@@ -106,6 +108,11 @@ function SignUp({ close }) {
             .catch((e) => {
               console.log(e.message);
             });
+
+          Toast.fire({
+            icon: "success",
+            title: "Welcome onboard Ejemi  👊🏿👏🏿",
+          });
         })
         .catch((e) => {
           setErrors({ ...errors, errorMessage: e.message });
@@ -119,17 +126,26 @@ function SignUp({ close }) {
   // Login
   const handleSigin = (e) => {
     e.preventDefault();
+    // const refresh = () => window.location.reload(true);
+
     signInWithEmailAndPassword(auth, signInData.email, signInData.password)
       .then((res) => {
         const userData = res.user;
         console.log(userData);
+        // setProfilePic(userData.displayName);
         dispatch(
           login({
             email: userData.email,
             uid: userData.uid,
-            displayName: signUpData.firstName,
+            displayName: userData.displayName,
           })
         );
+
+        // refresh();
+        Toast.fire({
+          icon: "success",
+          title: "Welcome back Oga'wa  👊🏿👏🏿",
+        });
       })
       .catch((e) => {
         setErrors({ ...errors, errorMessage: e.message });

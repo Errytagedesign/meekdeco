@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 // icons
@@ -11,17 +11,20 @@ import styles from "./NavBar.module.scss";
 import images from "../../export/images";
 import Link from "next/link";
 import SignUp from "../auth/signUp/SignUp";
-import { useSelector } from "react-redux";
 
+import { useDispatch, useSelector } from "react-redux";
 import { selectUsers } from "@/features/loginSlice";
+import { logout, login } from "@/features/loginSlice";
+import { auth, onAuthStateChanged } from "@/libs/firebase-config";
 
 function NavBar() {
   const [navbar, setNavbar] = useState(true);
   const [activeItem, setActiveItem] = useState(false);
   const [show, setShow] = useState(false);
-
+  const [dPName, setDPName] = useState("");
   // redux toolkits
   const currentUser = useSelector(selectUsers);
+  const dispatch = useDispatch();
 
   const handleNav = () => {
     setNavbar(!navbar);
@@ -51,7 +54,46 @@ function NavBar() {
     { id: 3, name: "Contact us", url: "/contact" },
   ];
 
+  // Logout
+  const handleLogOut = () => {
+    // Redux User logout reducer which set user to null
+    dispatch(logout());
+
+    // firebase sign out auth
+    auth.signOut();
+
+    if (auth.signOut()) {
+      setDPName("");
+      setShow(false);
+      window.location.reload(true);
+      console.log("signed out");
+    }
+  };
   // console.log(NavLinks[0].explore);
+
+  // on browser reload the logins should be dispatch by redux to persist logged in user
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (res) => {
+      console.log(res);
+
+      if (res) {
+        // after successfully signed in, this login form componens close immediately
+        setShow(!show["login-form"]);
+        setDPName(res.displayName);
+        // then dispatch the login data to redux to persist the loggedin user
+        dispatch(
+          login({
+            email: res.email,
+            uid: res.uid,
+          })
+        );
+      } else {
+        dispatch(logout());
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -92,7 +134,7 @@ function NavBar() {
                   ))}
                 </section>
 
-                <div className="d-flex flex-column flex-lg-row justify-content-between col-12 col-lg-4">
+                <div className="d-flex flex-column flex-lg-row justify-content-between col-12 align-items-center col-lg-5">
                   <div className="me-3 col-12 col-lg-6">
                     {" "}
                     <input
@@ -103,30 +145,41 @@ function NavBar() {
                   </div>
 
                   <div
-                    className={` ${styles.profile} d-flex flex-row justify-content-between mt-3 mt-lg-0 col-12 col-lg-6 `}
+                    className={` ${styles.profile} d-flex flex-row justify-content-between align-items-center mt-3 mt-lg-0 col-12 col-lg-6 `}
                   >
                     <Image src={images.cart} alt="" />
                     <Image src={images.heart} alt="" />
                     <div>
-                      <Image
-                        id="profile"
-                        onClick={() => {
-                          handlePopUp("logincta");
-                        }}
-                        src={images.profile}
-                        alt=""
-                      />
+                      {dPName ? (
+                        <h3
+                          id="profile"
+                          onClick={() => {
+                            handlePopUp("logincta");
+                          }}
+                          className={styles.DP}
+                        >
+                          {" "}
+                          {dPName.slice(0, 2)}{" "}
+                        </h3>
+                      ) : (
+                        <Image
+                          id="profile"
+                          onClick={() => {
+                            handlePopUp("logincta");
+                          }}
+                          src={images.profile}
+                          alt=""
+                        />
+                      )}
                     </div>
-                    {show["logincta"] && (
+                    {!show["login-form"] && show["logincta"] && (
                       <section
                         id="logincta"
                         data-aos="zoom-in"
                         className={`${styles.loginBtn} d-flex align-items-center justify-content-center`}
                       >
                         {currentUser ? (
-                          <button onClick={() => handlePopUp("login-form")}>
-                            Logout
-                          </button>
+                          <button onClick={handleLogOut}>Logout</button>
                         ) : (
                           <button onClick={() => handlePopUp("login-form")}>
                             Login

@@ -28,6 +28,14 @@
     .profile {
       position: relative;
 
+      .DP {
+        background-color: var(--pryColor);
+        border-radius: 50%;
+        padding: 0.3em;
+        color: var(--white);
+        text-transform: uppercase;
+      }
+
       .loginBtn {
         position: absolute;
         top: 80px;
