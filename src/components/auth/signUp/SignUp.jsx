@@ -7,9 +7,10 @@ import {
   signInWithEmailAndPassword,
 } from "@/libs/firebase-config";
 import { BsFillEyeSlashFill, BsFillEyeFill } from "react-icons/bs";
-import { selectUsers, login, logout } from "@/features/loginSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/features/loginSlice";
+import { useDispatch } from "react-redux";
 import { useSweetAlert } from "@/hooks/useSweetAlert";
+import Spinner from "@/components/spinner/Spinner";
 
 const initialState = {
   firstName: "",
@@ -27,7 +28,7 @@ function SignUp({ close }) {
     errorMessage: "",
     errorBolean: false,
   });
-
+  const [loading, setLoading] = useState(false);
   const [userSignUP, setUserSignUP] = useState(false);
   const [passwordType, setPasswordType] = useState(false);
 
@@ -79,7 +80,8 @@ function SignUp({ close }) {
   const handleSignUp = (e) => {
     e.preventDefault();
     setErrors({ ...errors, errorBolean: false });
-    console.log(signUpData);
+    // console.log(signUpData);
+    setLoading(true);
 
     if (validatePassword()) {
       createUserWithEmailAndPassword(
@@ -109,6 +111,7 @@ function SignUp({ close }) {
               console.log(e.message);
             });
 
+          setLoading(false);
           Toast.fire({
             icon: "success",
             title: "Welcome onboard Ejemi  👊🏿👏🏿",
@@ -116,6 +119,8 @@ function SignUp({ close }) {
         })
         .catch((e) => {
           setErrors({ ...errors, errorMessage: e.message });
+          setLoading(false);
+
           console.log(e.message);
         });
     }
@@ -127,12 +132,13 @@ function SignUp({ close }) {
   const handleSigin = (e) => {
     e.preventDefault();
     // const refresh = () => window.location.reload(true);
+    setLoading(true);
 
     signInWithEmailAndPassword(auth, signInData.email, signInData.password)
       .then((res) => {
         const userData = res.user;
-        console.log(userData);
-        // setProfilePic(userData.displayName);
+        // console.log(userData);
+
         dispatch(
           login({
             email: userData.email,
@@ -142,12 +148,14 @@ function SignUp({ close }) {
         );
 
         // refresh();
+        setLoading(false);
         Toast.fire({
           icon: "success",
           title: "Welcome back Oga'wa  👊🏿👏🏿",
         });
       })
       .catch((e) => {
+        setLoading(false);
         setErrors({ ...errors, errorMessage: e.message });
       });
   };
@@ -328,6 +336,8 @@ function SignUp({ close }) {
             {errors.errorMessage && (
               <small style={{ color: "red" }}> {errors.errorMessage} </small>
             )}
+
+            {loading && <Spinner />}
             <div data-aos="zoom-in" className="mt-5 mb-3 col-8">
               <button onClick={handleSigin} className="main-btn col-12">
                 {" "}
