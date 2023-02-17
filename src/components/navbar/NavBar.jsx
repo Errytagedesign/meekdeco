@@ -16,12 +16,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUsers } from "@/features/loginSlice";
 import { logout, login } from "@/features/loginSlice";
 import { auth, onAuthStateChanged } from "@/libs/firebase-config";
+import { useRouter } from "next/router";
 
 function NavBar() {
   const [navbar, setNavbar] = useState(true);
   const [activeItem, setActiveItem] = useState(false);
   const [show, setShow] = useState(false);
   const [dPName, setDPName] = useState("");
+
+  const redirect = useRouter();
+
   // redux toolkits
   const currentUser = useSelector(selectUsers);
   const dispatch = useDispatch();
@@ -94,6 +98,18 @@ function NavBar() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // If loggied in user isn't admin, blocked them from accessing the dashboard
+  useEffect(() => {
+    // setLoading(true);
+    // if (redirect.pathname === "/dashboard/adminpanel") {
+    //   if (!currentUser) {
+    //     console.log("not loggedin");
+    //     redirect.push("/about");
+    //   }
+    // }
+    // setLoading(false);
+  }, [currentUser, redirect]);
 
   return (
     <div>

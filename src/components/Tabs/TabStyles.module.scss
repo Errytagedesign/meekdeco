@@ -1,0 +1,69 @@
+.dashboard {
+  background-color: var(--white);
+
+  .tabs {
+    background-color: var(--secColor);
+    height: auto;
+    header {
+      // background-color: red;
+      padding: 0.5em;
+      margin-top: 1em;
+    }
+    @media screen and (max-width: 900px) {
+      width: 100%;
+      // padding: 20px 10px;
+    }
+
+    @media screen and (max-width: 900px) {
+      h4 {
+        font-size: 17px;
+      }
+      .active {
+        padding: 20px;
+      }
+    }
+
+    .tabTitleContainer {
+      margin-top: 100px;
+
+      .tabTitle {
+        width: 100%;
+        margin-top: 40px;
+        // padding: 1em;
+        // height: 50px;
+        .active {
+          background-color: var(--pryColor);
+          color: var(--white);
+          transition: all 1s ease-in-out;
+          padding: 1em;
+          border-bottom-right-radius: 12px;
+          border-top-right-radius: 12px;
+
+          h4 {
+            margin: 0;
+          }
+        }
+
+        .notActive {
+          padding: 1em;
+        }
+        @media screen and (max-width: 900px) {
+          .active,
+          .notActive {
+            padding: 15px;
+          }
+        }
+      }
+    }
+
+    // .tab-contents {
+    //   background-color: var(--white);
+
+    //   padding: 50px 0;
+    // }
+  }
+
+  // .tabContents {
+  //   background-color: red;
+  // }
+}

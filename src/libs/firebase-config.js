@@ -1,6 +1,6 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref } from "firebase/storage";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -36,4 +36,5 @@ export {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  ref,
 };

@@ -1,0 +1,26 @@
+.uploadContainer {
+  //   background-color: red;
+  // height: fit-content;
+  max-height: 70%;
+  label {
+    margin: 1em 0;
+  }
+
+  .upload {
+    background-color: rgb(237, 237, 237);
+    padding: 1em;
+    // height: auto;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .uploadInp {
+    display: none;
+    background-color: red;
+  }
+  .imgPreview {
+    // background-color: rgb(237, 237, 237);
+    padding: 1em;
+    border-radius: 10px;
+  }
+}
