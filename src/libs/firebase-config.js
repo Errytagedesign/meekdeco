@@ -22,14 +22,14 @@ const firebaseConfig = {
 // initialize firebase
 const app = getApps.length > 0 ? getApp : initializeApp(firebaseConfig);
 
-const firestore = getFirestore(app);
+const dataBase = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
 
 export {
   auth,
   app,
-  firestore,
+  dataBase,
   storage,
   createUserWithEmailAndPassword,
   updateProfile,

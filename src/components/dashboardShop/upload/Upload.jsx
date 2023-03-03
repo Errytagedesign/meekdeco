@@ -1,24 +1,30 @@
-import React, { useState } from "react";
-import Spinner from "@/components/spinner/Spinner";
+import React, { useState, useCallback, useEffect } from "react";
+// import Spinner from "@/components/spinner/Spinner";
+import { Spinner } from "react-bootstrap";
 import { BsCloudUploadFill } from "react-icons/bs";
-import images from "@/export/images";
-import { ref, storage } from "@/libs/firebase-config";
-
-// Styles
-import styles from "./Upload.module.scss";
+// import images from "@/export/images";
+import { dataBase, ref, storage } from "@/libs/firebase-config";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import { useSweetAlert } from "@/hooks/useSweetAlert";
+
+// Styles
+import styles from "./Upload.module.scss";
 
 const initialState = {
   productName: "",
   category: "",
   imageSrc: "",
   price: 0,
+  featured: false,
+  description: "",
 };
 
 function Upload() {
   const [uploadData, setUploadData] = useState(initialState);
+  // const [addinput, setAddInput] = useState([]);
   const [errors, setErrors] = useState({
     errorMessage: "",
     errorBolean: false,
@@ -26,8 +32,40 @@ function Upload() {
   const [loading, setLoading] = useState(false);
   const [productImage, setProductImage] = useState("");
 
+  // const handAdd = () => {
+  //   setAddInput((prev) => {
+  //     console.log(prev);
+  //     return [...prev, { id: prev.length + 1, value: "" }];
+  //   });
+  // };
+
+  // Sweetalerts
+  const { Toast } = useSweetAlert();
+
   const handleChange = (e) => {
-    setUploadData({ ...uploadData, [e.target.name]: e.target.value });
+    // This is how to target an attribute of a particular input among many inputa data while using onChange event "checked" is attribute of a chekbox input, so i get the event value when changing
+    const { checked, name } = e.target;
+    // console.log("checkit" + checked);
+
+    // and then set all input value into this setState.
+    setUploadData((prev) => {
+      if (name === "featured") {
+        return {
+          ...prev,
+          featured: checked,
+        };
+      } else {
+        return {
+          ...prev,
+          [e.target.name]: e.target.value,
+        };
+      }
+    });
+    // setUploadData({
+    //   ...uploadData,
+    //   [e.target.name]: e.target.value,
+    //   featured: checked,
+    // });
   };
 
   const handleUploadImage = (e) => {
@@ -67,11 +105,64 @@ function Upload() {
     );
   };
 
-  const handleProductUpload = (e) => {
-    e.preventDefault();
-
-    console.log(uploadData);
+  // clear all imput file after saving
+  const handleClearField = () => {
+    setUploadData(initialState);
+    setProductImage("");
   };
+
+  // Upload products when all input fields are valid
+  const handleProductUpload = async (e) => {
+    e.preventDefault();
+    console.log(uploadData);
+
+    setLoading(true);
+
+    try {
+      if (
+        uploadData.category === "" ||
+        uploadData.price === "" ||
+        uploadData.productName === "" ||
+        // uploadData.imageSrc === "" ||
+        uploadData.description === ""
+      ) {
+        setErrors({ ...errors, errorBolean: true });
+        // setLoading(false);
+      } else {
+        await setDoc(doc(dataBase, "products", `${Date.now()}`), uploadData);
+        setLoading(false);
+        Toast.fire({
+          icon: "success",
+          title: "Product uploaded successfully 🥳🥰",
+        });
+        handleClearField();
+      }
+    } catch (e) {
+      setLoading(false);
+      setErrors({ ...errors, errorBolean: true });
+      alert(e);
+      console.log(e);
+    }
+  };
+
+  // anytime any of the input is active, the error will be set to false
+
+  useEffect(() => {
+    if (
+      uploadData.category !== "" ||
+      uploadData.price !== "" ||
+      uploadData.productName !== "" ||
+      uploadData.imageSrc !== "" ||
+      uploadData.description !== ""
+    )
+      setErrors({ errorBolean: false });
+  }, [
+    uploadData.category,
+    uploadData.description,
+    uploadData.imageSrc,
+    uploadData.price,
+    uploadData.productName,
+  ]);
 
   return (
     <main
@@ -82,18 +173,18 @@ function Upload() {
         data-aos="zoom-out"
         className={` d-flex flex-column align-items-center justify-content-center col-12`}
       >
-        <div data-aos="fade-left" className="col-8 mt-2">
+        <div data-aos="fade-left" className="col-10 mt-1">
           <label htmlFor="name"> Product Name</label>
           <input
             type="text"
             name="productName"
-            defaultValue={initialState.productName}
+            value={uploadData.productName}
             onChange={handleChange}
-            placeholder="enter product name"
+            placeholder="Enter product name"
             className="form-control"
           />
         </div>
-        <div data-aos="fade-right" className="col-8 mt-2">
+        <div data-aos="fade-right" className="col-10 mt-1">
           <label htmlFor="Category"> Category </label>
           <select
             name="category"
@@ -102,13 +193,15 @@ function Upload() {
             onChange={handleChange}
           >
             <option> Select Category </option>
-            <option value="couch"> Couch </option>
+            <option value="couch"> Stool </option>
+            <option value="couch"> Table </option>
+            <option value="Office Chair"> Single Sofa </option>
             <option value="Office Chair"> Office Chair </option>
-            <option value="Wooden Chair"> Wooden Chair </option>
+            <option value="Wooden Chair"> Wooden Sofa </option>
           </select>
         </div>
 
-        <div data-aos="fade-left" className="col-8 mt-2">
+        <div data-aos="fade-left" className="col-10 mt-1">
           <label
             htmlFor="ProductImage"
             className={`${styles.upload}  col-12  `}
@@ -140,7 +233,7 @@ function Upload() {
                   type="file"
                   accept="image/*"
                   name="imageSrc"
-                  defaultValue={initialState.imageSrc}
+                  value={uploadData.imageSrc}
                   onChange={handleUploadImage}
                   className={styles.uploadInp}
                 />
@@ -153,32 +246,90 @@ function Upload() {
 
         <div
           data-aos="fade-left"
-          className="d-flex flex-row justify-content-between align-items-center col-8  mt-2"
+          className="d-flex flex-row justify-content-between align-items-center col-10  mt-1"
         >
-          <h4> Price: $ {uploadData.price}</h4>
-          <div>
+          <div className="col-8 d-flex flex-row align-items-center">
+            <h5 className="col-6"> Price: ₦ {uploadData.price}</h5>
+            <div className="col-5">
+              <input
+                type="number"
+                name="price"
+                value={uploadData.price}
+                onChange={handleChange}
+                placeholder="enter product price"
+                className="form-control"
+              />
+            </div>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: "var(--pryColor)",
+              color: "white",
+              borderRadius: "5px",
+            }}
+            className="d-flex flex-row align-items-center p-2 "
+          >
+            <small className="me-2"> Featured </small>
             <input
-              type="text"
-              name="price"
-              defaultValue={initialState.price}
+              name="featured"
+              type="checkbox"
+              value={uploadData.featured}
+              checked={uploadData.featured || false}
               onChange={handleChange}
-              placeholder="enter product price"
-              className="form-control"
+              // placeholder="enter product price"
+              // className="form-control"
             />
           </div>
         </div>
+        <div data-aos="fade-left" className="align-items-center col-10  mt-1">
+          <label htmlFor="description"> Description </label>
 
+          <textarea
+            name="description"
+            value={uploadData.description}
+            placeholder="Enter product description"
+            className="form-control"
+            rows="5"
+            cols="20"
+            onChange={handleChange}
+          />
+        </div>
         <motion.div
           whileTap={{ scale: 1.1 }}
           data-aos="zoom-in"
-          className="mt-5 mb-3 col-8"
+          className="mt-3 mb-3 col-10"
         >
           <button onClick={handleProductUpload} className="main-btn col-12">
-            {" "}
-            Save{" "}
+            {loading ? <Spinner /> : "Save"}
           </button>
         </motion.div>
+
+        {errors.errorBolean && (
+          <h3 style={{ color: "red" }}> All field must filled </h3>
+        )}
       </form>
+
+      {/* <button className="main-btn" onClick={handAdd}>
+        {" "}
+        Add{" "}
+      </button>
+
+      {addinput &&
+        addinput.map((inp, key) => {
+          console.log("re-rendered", key);
+
+          return (
+            <div key={key}>
+              <input
+                placeholder="enter product name"
+                className="form-control"
+                key={inp.key}
+                value={inp.value}
+              />
+            </div>
+          );
+        })} */}
     </main>
   );
 }

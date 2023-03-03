@@ -116,13 +116,15 @@ function NavBar() {
       <section className={styles.nav_container}>
         <nav className="d-flex container flex-row align-items-center justify-content-between">
           {/* Logo */}
-          <Link
-            onClick={() => setActiveItem(false)}
-            href="/"
-            className="col-7 col-lg-3"
-          >
-            <Image src={images.Logo} alt=" Wolf Pack Logo" />
-          </Link>
+          <div>
+            <Link
+              className="col-7 col-lg-3"
+              onClick={() => setActiveItem(false)}
+              href="/"
+            >
+              <Image src={images.Logo} alt=" Wolf Pack Logo" />
+            </Link>
+          </div>
           <div
             className={`col-12 col-lg-8 d-flex flex-column flex-lg-row ${
               navbar ? styles.displayNav : styles.navMove
@@ -163,8 +165,12 @@ function NavBar() {
                   <div
                     className={` ${styles.profile} d-flex flex-row justify-content-between align-items-center mt-3 mt-lg-0 col-12 col-lg-6 `}
                   >
-                    <Image src={images.cart} alt="" />
-                    <Image src={images.heart} alt="" />
+                    <div>
+                      <Image src={images.cart} alt="" />
+                    </div>
+                    <div>
+                      <Image src={images.heart} alt="" />
+                    </div>
                     <div>
                       {dPName ? (
                         <h3
