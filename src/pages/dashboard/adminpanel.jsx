@@ -30,22 +30,21 @@ function AdminPanel() {
   // }, [currentUser, redirect]);
 
   return (
-    <main
-      className={`${styles.dashboard} d-flex flex-row justify-content-between`}
-    >
-      <section className={styles.tabs}>
-        {/* Logo */}
-        <header className="col-12">
-          <Link href="/">
-            <Image src={images.Logo} alt=" Meek deco Logo" />
-          </Link>
-        </header>
-        <section
-          className={`${styles.tabTitleContainer} d-flex flex-column justify-content-between align-items-center`}
-        >
-          <section className={styles.tabsContainer}>
+    <main className={`${styles.dashboard} d-flex flex-column `}>
+      {/* Logo */}
+      <header className="d-flex flex-row p-3">
+        <Link href="/" className="col-2">
+          <Image src={images.Logo} alt=" Meek deco Logo" />
+        </Link>
+      </header>
+
+      <main className="d-flex flex-column flex-md-row">
+        <article className={`${styles.tabs} col-12 col-md-2`}>
+          <section
+            className={`${styles.tabTitleContainer} d-flex flex-row flex-md-column justify-content-between`}
+          >
             {TabsData[0].TabTitle.map((tab) => (
-              <section key={tab.id} className={`${styles.tabTitle}`}>
+              <section key={tab.id} className={`${styles.tabTitle} `}>
                 <TabTitle
                   id={tab.id}
                   title={tab.title}
@@ -57,20 +56,22 @@ function AdminPanel() {
               </section>
             ))}
           </section>
-        </section>
-      </section>
-      <section className={`${styles.tabContents} d-flex flex-column col-9`}>
-        {TabsData[0].TabContents.map((tab) => (
-          <section key={tab.id} className={`${styles.tabContents} `}>
-            <TabContents
-              id={tab.id}
-              styles={styles}
-              activeTab={activeTab}
-              comps={tab.comp}
-            />
-          </section>
-        ))}
-      </section>
+        </article>
+        <aside
+          className={`${styles.tabContents} d-flex flex-column col-12 col-md-9`}
+        >
+          {TabsData[0].TabContents.map((tab) => (
+            <section key={tab.id} className={`${styles.tabContents} `}>
+              <TabContents
+                id={tab.id}
+                styles={styles}
+                activeTab={activeTab}
+                comps={tab.comp}
+              />
+            </section>
+          ))}
+        </aside>
+      </main>
     </main>
   );
 }

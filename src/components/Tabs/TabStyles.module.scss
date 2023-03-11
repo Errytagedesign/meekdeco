@@ -1,14 +1,15 @@
 .dashboard {
   background-color: var(--white);
 
+  header {
+    // background-color: red;
+    padding: 0.5em;
+    // margin-top: 1em;
+    background-color: var(--greyColor);
+  }
   .tabs {
     background-color: var(--secColor);
     height: auto;
-    header {
-      // background-color: red;
-      padding: 0.5em;
-      margin-top: 1em;
-    }
     @media screen and (max-width: 900px) {
       width: 100%;
       // padding: 20px 10px;
@@ -25,7 +26,7 @@
 
     .tabTitleContainer {
       margin-top: 100px;
-
+      cursor: pointer;
       .tabTitle {
         width: 100%;
         margin-top: 40px;
@@ -46,11 +47,17 @@
 
         .notActive {
           padding: 1em;
+          h4 {
+            margin: 0;
+          }
         }
         @media screen and (max-width: 900px) {
           .active,
           .notActive {
             padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         }
       }
