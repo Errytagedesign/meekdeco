@@ -1,60 +1,28 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { dataBase, ref, storage } from "@/libs/firebase-config";
-
-import {
-  collection,
-  query,
-  docs,
-  where,
-  getDocs,
-  orderBy,
-} from "firebase/firestore";
+import React from "react";
 
 import styles from "./Products.module.scss";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { selectProducts } from "@/features/productSlice";
 
 function Products() {
-  const [products, setProducts] = useState();
+  const products = useSelector(selectProducts);
 
-  // let nowdata = [];
-
-  // const getAllDatas = async () => {
-  //   const querySnapshot = await getDocs(collection(dataBase, "products"));
-
-  //   return querySnapshot.docs.map((doc) => doc.data());
-  // };
-
-  // const fetchDatas = async () => {
-  //   await getAllDatas().then((res) => {
-  //     console.log(res);
-  //     setProducts(res);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchDatas();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const loadData = useMemo(() => Datas(), []);
-
-  // console.log(products);
-
+  console.log(products);
   return (
     <main className={styles.products}>
-      {products?.map((item) => (
-        <section
-          className={`${styles.container} d-flex flex-column`}
-          key={item.id}
-        >
+      {products.data.map(({ id, imageSrc, productName }) => (
+        <section className={`${styles.container} d-flex flex-column`} key={id}>
           <div className="col=12">
-            <Image width={100} height={100} src={item.imageSrc} alt="" />
+            <Image width={100} height={100} src={imageSrc} alt="" />
           </div>
-          <h2> {item.productName} </h2>
+          <h2> {productName} </h2>
         </section>
       ))}
     </main>
   );
 }
+
+// my task Tomorrow, in sha Allah, is to edit and delete product from dashboard
 
 export default Products;

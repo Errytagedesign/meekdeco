@@ -1,13 +1,6 @@
-import { dataBase, ref, storage } from "@/libs/firebase-config";
+import { dataBase } from "@/libs/firebase-config";
 
-import {
-  collection,
-  query,
-  docs,
-  where,
-  getDocs,
-  orderBy,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 export const getAllDatas = async () => {
   const productItems = await getDocs(collection(dataBase, "products"));

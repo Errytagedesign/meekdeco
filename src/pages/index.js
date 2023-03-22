@@ -1,14 +1,25 @@
+import React, { useMemo } from "react";
 import Head from "next/head";
 import { Manrope } from "@next/font/google";
 import styles from "@/styles/Home.module.scss";
 import { NavBar } from "@/export/allComps";
 import { getAllDatas } from "@/hooks/firebaseFetching";
 import Image from "next/image";
+import { allProducts, selectProducts } from "@/features/productSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
 export default function Home({ data }) {
-  console.log(data);
+  const select = useSelector(selectProducts);
+  const dispatch = useDispatch();
+
+  console.log(select);
+
+  useMemo(() => {
+    dispatch(allProducts({ data }));
+  }, [data, dispatch]);
+
   return (
     <>
       <Head>
@@ -28,15 +39,15 @@ export default function Home({ data }) {
         <h2> home </h2>
 
         <section className="d-flex flex-wrap">
-          {data?.map((item) => (
+          {data?.map(({ id, imageSrc, productName }) => (
             <section
               className={`${styles.container} d-flex flex-column col-12 col-md-4`}
-              key={item.id}
+              key={id}
             >
               <div className="col=12">
-                <Image width={100} height={100} src={item.imageSrc} alt="" />
+                <Image width={100} height={100} src={imageSrc} alt="" />
               </div>
-              <h2> {item.productName} </h2>
+              <h2> {productName} </h2>
             </section>
           ))}
         </section>
@@ -48,5 +59,6 @@ export default function Home({ data }) {
 export async function getServerSideProps() {
   const data = await getAllDatas();
   // const data = await productsItems.json();
+
   return { props: { data } };
 }
