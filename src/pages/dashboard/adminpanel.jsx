@@ -12,13 +12,15 @@ import images from "@/export/images";
 
 // styles
 import styles from "@/components/Tabs/TabStyles.module.scss";
+import { selectProducts } from "@/features/productSlice";
 
 function AdminPanel() {
   const [activeTab, setActiveTab] = useState("tab1");
   const currentUser = useSelector(selectUsers);
+  const see = useSelector(selectProducts);
   const [loading, setLoading] = useState(false);
 
-  // console.log(currentUser);
+  console.log(see);
 
   // useEffect(() => {
   //   setLoading(true);

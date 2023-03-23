@@ -5,10 +5,10 @@ import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Footer, NavBar } from "@/export/allComps";
 import { Provider } from "react-redux";
-import store from "./../stores/store";
+import store, { wrapper } from "./../stores/store";
 import { useRouter } from "next/router";
 
-export default function App({ Component, pageProps }) {
+const App = ({ Component, pageProps }) => {
   const AOS = require("aos");
   useEffect(() => {
     AOS.init();
@@ -17,10 +17,12 @@ export default function App({ Component, pageProps }) {
   const path = router.pathname;
 
   return (
-    <Provider store={store}>
+    <>
       {path !== "/dashboard/adminpanel" && <NavBar />}
       <Component {...pageProps} />
       <Footer />
-    </Provider>
+    </>
   );
-}
+};
+
+export default wrapper.withRedux(App);

@@ -1,7 +1,7 @@
 .nav_container {
   width: 100%;
 
-  background-color: #ffffff0f;
+  background: var(--greyColor);
   backdrop-filter: blur(15px) brightness(0.9);
   -webkit-backdrop-filter: blur(15px) brightness(0.9);
   position: relative;
@@ -10,6 +10,9 @@
     // padding: 0.6em 0;
     @media screen and (max-width: 600px) {
       width: 90%;
+    }
+    @media screen and (max-width: 900px) {
+      padding: 1em 0;
     }
 
     article {

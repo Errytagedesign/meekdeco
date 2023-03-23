@@ -1,24 +1,39 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { Manrope } from "@next/font/google";
 import styles from "@/styles/Home.module.scss";
 import { NavBar } from "@/export/allComps";
 import { getAllDatas } from "@/hooks/firebaseFetching";
 import Image from "next/image";
-import { allProducts, selectProducts } from "@/features/productSlice";
+import {
+  allProducts,
+  increaMent,
+  selectProducts,
+} from "@/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
+import { wrapper } from "@/stores/store";
+import { selectUsers } from "@/features/loginSlice";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
 export default function Home({ data }) {
   const select = useSelector(selectProducts);
+  const us = useSelector(selectUsers);
   const dispatch = useDispatch();
 
   console.log(select);
+  console.log(us);
 
-  useMemo(() => {
-    dispatch(allProducts({ data }));
-  }, [data, dispatch]);
+  // useCallback(() => {
+  //   // console.log("rerender");
+  //   dispatch(allProducts({ data }));
+  // }, [data, dispatch]);
+
+  // useEffect(() => {
+  //   updateState();
+  //   // getAllDatas();
+  // }, [updateState]);
 
   return (
     <>
@@ -39,7 +54,7 @@ export default function Home({ data }) {
         <h2> home </h2>
 
         <section className="d-flex flex-wrap">
-          {data?.map(({ id, imageSrc, productName }) => (
+          {data.map(({ id, imageSrc, productName }) => (
             <section
               className={`${styles.container} d-flex flex-column col-12 col-md-4`}
               key={id}
@@ -51,14 +66,26 @@ export default function Home({ data }) {
             </section>
           ))}
         </section>
+
+        <Button
+          onClick={() => {
+            dispatch(increaMent());
+          }}
+        >
+          {" "}
+          add{" "}
+        </Button>
       </main>
     </>
   );
 }
 
-export async function getServerSideProps() {
-  const data = await getAllDatas();
-  // const data = await productsItems.json();
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async () => {
+    console.log(store);
+    const data = await getAllDatas();
+    store.dispatch(allProducts({ data }));
 
-  return { props: { data } };
-}
+    return { props: { data } };
+  }
+);
