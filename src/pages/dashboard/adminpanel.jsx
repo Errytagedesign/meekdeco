@@ -17,10 +17,6 @@ import { selectProducts } from "@/features/productSlice";
 function AdminPanel() {
   const [activeTab, setActiveTab] = useState("tab1");
   const currentUser = useSelector(selectUsers);
-  const see = useSelector(selectProducts);
-  const [loading, setLoading] = useState(false);
-
-  console.log(see);
 
   // useEffect(() => {
   //   setLoading(true);

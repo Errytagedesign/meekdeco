@@ -12,8 +12,8 @@ import { useSweetAlert } from "@/hooks/useSweetAlert";
 
 // Styles
 import styles from "./Upload.module.scss";
-import { useSelector } from "react-redux";
-import { selectProducts } from "@/features/productSlice";
+// import { useSelector } from "react-redux";
+// import { selectProducts } from "@/features/productSlice";
 
 const initialState = {
   productName: "",
