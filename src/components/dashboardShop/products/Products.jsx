@@ -25,6 +25,7 @@ function Products() {
   const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
   const [productImage, setProductImage] = useState("");
   const [errors, setErrors] = useState({
     errorMessage: "",
@@ -84,6 +85,8 @@ function Products() {
 
   const handleEdit = (e) => {
     // Use array.find method to check if the id of the clicked product matches the id of the data from database
+
+    setShow(!show);
     const editId = e.target.id;
     let findId = data.find((el) => el.id === editId);
 
@@ -123,7 +126,7 @@ function Products() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
           setProductImage(imageUrl);
-          setUploadData({ ...uploadData, imageSrc: imageUrl });
+          setUpdateData({ ...updateData, imageSrc: imageUrl });
           setLoading(false);
         });
       }
@@ -207,11 +210,14 @@ function Products() {
     console.log(updateData);
 
     updateDoc(productToUpdate, updateData)
-      .then((productToUpdate) => {
+      .then(() => {
+        setShow(false);
         Toast.fire({
           icon: "success",
           title: "Product uploaded successfully 🥳🥰",
         });
+
+        window.location.reload();
       })
       .catch((e) => {
         console.log(e);
@@ -253,163 +259,165 @@ function Products() {
         ))
       )}
 
-      <form
-        data-aos-duration="2000"
-        data-aos="zoom-out"
-        className={` d-flex flex-column align-items-center justify-content-center col-12`}
-      >
-        <div data-aos="fade-left" className="col-10 mt-1">
-          <label htmlFor="name"> Product Name</label>
-          <input
-            type="text"
-            name="productName"
-            value={updateData.productName}
-            onChange={handleChange}
-            placeholder="Enter product name"
-            className="form-control"
-          />
-        </div>
-        <div data-aos="fade-right" className="col-10 mt-1">
-          <label htmlFor="Category"> Category </label>
-          <select
-            name="category"
-            className={`${styles.inputContainer} form-select`}
-            value={updateData.category}
-            onChange={handleChange}
-          >
-            <option> Select Category </option>
-            <option value="couch"> Stool </option>
-            <option value="couch"> Table </option>
-            <option value="Office Chair"> Single Sofa </option>
-            <option value="Office Chair"> Office Chair </option>
-            <option value="Wooden Chair"> Wooden Sofa </option>
-          </select>
-        </div>
-
-        <div data-aos="fade-left" className="col-10 mt-1">
-          <label
-            htmlFor="ProductImage"
-            className={`${styles.upload}  col-12  `}
-          >
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                {!productImage ? (
-                  <div className="d-flex flex-column justify-content-center align-items-center p-5">
-                    <BsCloudUploadFill fontSize={30} />
-                    <small> Upload Images </small>
-
-                    {/* Product Image */}
-                    <input
-                      id="ProductImage"
-                      type="file"
-                      accept="image/*"
-                      name="imageSrc"
-                      value={updateData.imageSrc}
-                      onChange={handleUploadImage}
-                      className={styles.uploadInp}
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className={`${styles.imgPreview} col-12 d-flex justify-content-center`}
-                  >
-                    <Image
-                      // className="col-12"
-
-                      width={100}
-                      height={100}
-                      // objectFit="cover"
-                      src={productImage}
-                      alt=""
-                    />
-                    <motion.div
-                      whileTap={{ scale: 1.4 }}
-                      data-aos="zoom-in"
-                      className={styles.delete}
-                      onClick={deleteProductImage}
-                    >
-                      <BsTrash
-                        size={38}
-                        color="white"
-                        className={styles.deleteIcon}
-                      />
-                    </motion.div>
-                  </div>
-                )}
-              </>
-            )}
-
-            {errors.errorMessage && <small> {errors.errorMessage} </small>}
-          </label>
-        </div>
-
-        <div
-          data-aos="fade-left"
-          className="d-flex flex-row justify-content-between align-items-center col-10  mt-1"
+      {show && (
+        <form
+          data-aos-duration="2000"
+          data-aos="zoom-out"
+          className={` d-flex flex-column align-items-center justify-content-center col-12`}
         >
-          <div className="col-8 d-flex flex-row align-items-center">
-            <h5 className="col-6"> Price: ₦ {updateData.price}</h5>
-            <div className="col-5">
-              <input
-                type="number"
-                name="price"
-                value={updateData.price}
-                onChange={handleChange}
-                placeholder="enter product price"
-                className="form-control"
-              />
-            </div>
+          <div data-aos="fade-left" className="col-10 mt-1">
+            <label htmlFor="name"> Product Name</label>
+            <input
+              type="text"
+              name="productName"
+              value={updateData.productName}
+              onChange={handleChange}
+              placeholder="Enter product name"
+              className="form-control"
+            />
+          </div>
+          <div data-aos="fade-right" className="col-10 mt-1">
+            <label htmlFor="Category"> Category </label>
+            <select
+              name="category"
+              className={`${styles.inputContainer} form-select`}
+              value={updateData.category}
+              onChange={handleChange}
+            >
+              <option> Select Category </option>
+              <option value="couch"> Stool </option>
+              <option value="couch"> Table </option>
+              <option value="Office Chair"> Single Sofa </option>
+              <option value="Office Chair"> Office Chair </option>
+              <option value="Wooden Chair"> Wooden Sofa </option>
+            </select>
+          </div>
+
+          <div data-aos="fade-left" className="col-10 mt-1">
+            <label
+              htmlFor="ProductImage"
+              className={`${styles.upload}  col-12  `}
+            >
+              {loading ? (
+                <Spinner />
+              ) : (
+                <>
+                  {!productImage ? (
+                    <div className="d-flex flex-column justify-content-center align-items-center p-5">
+                      <BsCloudUploadFill fontSize={30} />
+                      <small> Upload Images </small>
+
+                      {/* Product Image */}
+                      <input
+                        id="ProductImage"
+                        type="file"
+                        accept="image/*"
+                        name="imageSrc"
+                        value={updateData.imageSrc}
+                        onChange={handleUploadImage}
+                        className={styles.uploadInp}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className={`${styles.imgPreview} col-12 d-flex justify-content-center`}
+                    >
+                      <Image
+                        // className="col-12"
+
+                        width={100}
+                        height={100}
+                        // objectFit="cover"
+                        src={productImage}
+                        alt=""
+                      />
+                      <motion.div
+                        whileTap={{ scale: 1.4 }}
+                        data-aos="zoom-in"
+                        className={styles.delete}
+                        onClick={deleteProductImage}
+                      >
+                        <BsTrash
+                          size={38}
+                          color="white"
+                          className={styles.deleteIcon}
+                        />
+                      </motion.div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {errors.errorMessage && <small> {errors.errorMessage} </small>}
+            </label>
           </div>
 
           <div
-            style={{
-              backgroundColor: "var(--pryColor)",
-              color: "white",
-              borderRadius: "5px",
-            }}
-            className="d-flex flex-row align-items-center p-2 "
+            data-aos="fade-left"
+            className="d-flex flex-row justify-content-between align-items-center col-10  mt-1"
           >
-            <small className="me-2"> Featured </small>
-            <input
-              name="featured"
-              type="checkbox"
-              value={updateData.featured}
-              checked={data.featured || false}
+            <div className="col-8 d-flex flex-row align-items-center">
+              <h5 className="col-6"> Price: ₦ {updateData.price}</h5>
+              <div className="col-5">
+                <input
+                  type="number"
+                  name="price"
+                  value={updateData.price}
+                  onChange={handleChange}
+                  placeholder="enter product price"
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "var(--pryColor)",
+                color: "white",
+                borderRadius: "5px",
+              }}
+              className="d-flex flex-row align-items-center p-2 "
+            >
+              <small className="me-2"> Featured </small>
+              <input
+                name="featured"
+                type="checkbox"
+                value={updateData.featured}
+                checked={data.featured || false}
+                onChange={handleChange}
+                // placeholder="enter product price"
+                // className="form-control"
+              />
+            </div>
+          </div>
+          <div data-aos="fade-left" className="align-items-center col-10  mt-1">
+            <label htmlFor="description"> Description </label>
+
+            <textarea
+              name="description"
+              value={updateData.description}
+              placeholder="Enter product description"
+              className="form-control"
+              rows="5"
+              cols="20"
               onChange={handleChange}
-              // placeholder="enter product price"
-              // className="form-control"
             />
           </div>
-        </div>
-        <div data-aos="fade-left" className="align-items-center col-10  mt-1">
-          <label htmlFor="description"> Description </label>
+          <motion.div
+            whileTap={{ scale: 1.1 }}
+            data-aos="zoom-in"
+            className="mt-3 mb-3 col-10"
+          >
+            <button onClick={handleUpdateProduct} className="main-btn col-12">
+              {loading ? <Spinner /> : "Save"}
+            </button>
+          </motion.div>
 
-          <textarea
-            name="description"
-            value={updateData.description}
-            placeholder="Enter product description"
-            className="form-control"
-            rows="5"
-            cols="20"
-            onChange={handleChange}
-          />
-        </div>
-        <motion.div
-          whileTap={{ scale: 1.1 }}
-          data-aos="zoom-in"
-          className="mt-3 mb-3 col-10"
-        >
-          <button onClick={handleUpdateProduct} className="main-btn col-12">
-            {loading ? <Spinner /> : "Save"}
-          </button>
-        </motion.div>
-
-        {errors.errorBolean && (
-          <h3 style={{ color: "red" }}> All field must filled </h3>
-        )}
-      </form>
+          {errors.errorBolean && (
+            <h3 style={{ color: "red" }}> All field must filled </h3>
+          )}
+        </form>
+      )}
     </main>
   );
 }
