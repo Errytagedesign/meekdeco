@@ -25,5 +25,16 @@
     // background-color: rgb(237, 237, 237);
     padding: 1em;
     border-radius: 10px;
+    .delete {
+      position: absolute;
+      background-color: red;
+      padding: 1em;
+      border-radius: 50%;
+      top: 90%;
+      cursor: pointer;
+      .deleteIcon {
+        font-weight: 900;
+      }
+    }
   }
 }

@@ -1,12 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
 // import Spinner from "@/components/spinner/Spinner";
 import { Spinner } from "react-bootstrap";
-import { BsCloudUploadFill } from "react-icons/bs";
+import { BsCloudUploadFill, BsTrash } from "react-icons/bs";
 // import images from "@/export/images";
 import { dataBase, ref, storage } from "@/libs/firebase-config";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { useSweetAlert } from "@/hooks/useSweetAlert";
 
@@ -43,6 +47,11 @@ function Upload() {
 
   // Sweetalerts
   const { Toast } = useSweetAlert();
+  // clear all imput file after saving
+  const handleClearField = () => {
+    setUploadData(initialState);
+    setProductImage("");
+  };
 
   const handleChange = (e) => {
     // This is how to target an attribute of a particular input among many inputa data while using onChange event "checked" is attribute of a chekbox input, so i get the event value when changing
@@ -107,10 +116,25 @@ function Upload() {
     );
   };
 
-  // clear all imput file after saving
-  const handleClearField = () => {
-    setUploadData(initialState);
-    setProductImage("");
+  // deleteProductImage
+  const deleteProductImage = () => {
+    // console.log(productImage);
+    const deleteImage = ref(storage, productImage);
+
+    deleteObject(deleteImage)
+      .then(() => {
+        // clearField();
+        setUploadData({ ...uploadData, imageSrc: "" });
+        setProductImage("");
+        Toast.fire({
+          icon: "success",
+          title: "Image deleted successfully.🗑🚮",
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    // setLoading(false);
   };
 
   // Upload products when all input fields are valid
@@ -208,38 +232,54 @@ function Upload() {
             htmlFor="ProductImage"
             className={`${styles.upload}  col-12  `}
           >
-            {productImage ? (
-              <div
-                className={`${styles.imgPreview} col-12 d-flex justify-content-center`}
-              >
-                <Image
-                  // className="col-12"
-
-                  width={100}
-                  height={100}
-                  // objectFit="cover"
-                  src={productImage}
-                  alt=""
-                />
-              </div>
-            ) : loading ? (
+            {loading ? (
               <Spinner />
             ) : (
-              <div className="d-flex flex-column justify-content-center align-items-center p-5">
-                <BsCloudUploadFill fontSize={30} />
-                <small> Upload Images </small>
+              <>
+                {!productImage ? (
+                  <div className="d-flex flex-column justify-content-center align-items-center p-5">
+                    <BsCloudUploadFill fontSize={30} />
+                    <small> Upload Images </small>
 
-                {/* Product Image */}
-                <input
-                  id="ProductImage"
-                  type="file"
-                  accept="image/*"
-                  name="imageSrc"
-                  value={uploadData.imageSrc}
-                  onChange={handleUploadImage}
-                  className={styles.uploadInp}
-                />
-              </div>
+                    {/* Product Image */}
+                    <input
+                      id="ProductImage"
+                      type="file"
+                      accept="image/*"
+                      name="imageSrc"
+                      value={uploadData.imageSrc}
+                      onChange={handleUploadImage}
+                      className={styles.uploadInp}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className={`${styles.imgPreview} col-12 d-flex justify-content-center`}
+                  >
+                    <Image
+                      // className="col-12"
+
+                      width={100}
+                      height={100}
+                      // objectFit="cover"
+                      src={productImage}
+                      alt=""
+                    />
+                    <motion.div
+                      whileTap={{ scale: 1.4 }}
+                      data-aos="zoom-in"
+                      className={styles.delete}
+                      onClick={deleteProductImage}
+                    >
+                      <BsTrash
+                        size={38}
+                        color="white"
+                        className={styles.deleteIcon}
+                      />
+                    </motion.div>
+                  </div>
+                )}
+              </>
             )}
 
             {errors.errorMessage && <small> {errors.errorMessage} </small>}

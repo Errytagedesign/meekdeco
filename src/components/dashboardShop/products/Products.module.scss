@@ -1,5 +1,31 @@
 .productContainer {
-  .container {
-    padding: 4em;
+  .upload {
+    background-color: rgb(237, 237, 237);
+    padding: 1em;
+    // height: auto;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .uploadInp {
+    display: none;
+    background-color: red;
+  }
+  .imgPreview {
+    // background-color: rgb(237, 237, 237);
+    position: relative;
+    padding: 1em;
+    border-radius: 10px;
+    .delete {
+      position: absolute;
+      background-color: red;
+      padding: 1em;
+      border-radius: 50%;
+      top: 90%;
+      cursor: pointer;
+      .deleteIcon {
+        font-weight: 900;
+      }
+    }
   }
 }
